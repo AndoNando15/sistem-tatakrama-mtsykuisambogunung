@@ -280,6 +280,17 @@
         .top-nav-search .form-control:focus { border-color: #1b6e3d; background: #fff; }
         .top-nav-search .btn { color: #1b6e3d; }
 
+        /* ── KARTU DATA MASTER (tampilan mobile, dipakai semua halaman master) ── */
+        .min-w-0 { min-width: 0; }
+        .m-card { padding: 14px 16px; margin: 0 0 10px; background: #fff; border: 1px solid #d3e6db; border-left: 3px solid #1f9d55; border-radius: 10px; box-shadow: 0 1px 3px rgba(20,30,60,.06); }
+        .m-card:last-child { margin-bottom: 0; }
+        .m-detail > div { grid-column: 1 / -1; }
+        .d-md-none:has(> .m-card) { padding: 10px; background: #f1f8f4; }
+        .m-detail { display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e3e6ec; font-size: .82rem; }
+        .m-detail dt { font-weight: 500; color: #8a91a0; }
+        .m-detail dd { margin: 0; color: #2b2f3a; word-break: break-word; }
+        .m-pager .pagination { justify-content: center; margin: 0; }
+
         /* ── MOBILE GLOBAL: layout tweak ── */
         @media (max-width: 768px) {
             /* Saat mobile home panel aktif (halaman dashboard), sembunyikan main layout */
@@ -298,7 +309,23 @@
                 padding-top: 0 !important;
             }
             body:not(.has-mobile-home) .page-header {
+                display: block !important;
+                margin: 0 0 12px !important;
+                padding: 0 !important;
+            }
+            /* Judul & breadcrumb sudah ada di mobile header; sisakan tombol aksi (mis. "Tambah") */
+            body:not(.has-mobile-home) .page-header .col,
+            body:not(.has-mobile-home) .page-header .btn-outline-secondary {
                 display: none !important;
+            }
+            body:not(.has-mobile-home) .page-header:not(:has(.col-auto .btn:not(.btn-outline-secondary))) {
+                display: none !important;
+            }
+            body:not(.has-mobile-home) .page-header .col-auto {
+                width: 100%;
+            }
+            body:not(.has-mobile-home) .page-header .col-auto .btn {
+                width: 100%;
             }
             body:not(.has-mobile-home) .content.container-fluid {
                 padding: 14px !important;

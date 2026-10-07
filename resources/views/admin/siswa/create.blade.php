@@ -63,6 +63,19 @@
                             @enderror
                         </div>
 
+                        <div class="col-md-6">
+                            <label for="nomor_induk_kemenag" class="form-label fw-semibold">Nomor Induk Kemenag</label>
+                            <input type="text"
+                                   id="nomor_induk_kemenag"
+                                   name="nomor_induk_kemenag"
+                                   class="form-control @error('nomor_induk_kemenag') is-invalid @enderror"
+                                   value="{{ old('nomor_induk_kemenag') }}"
+                                   maxlength="255">
+                            @error('nomor_induk_kemenag')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         {{-- ========================
                             NAMA SISWA
                             ======================== --}}
@@ -138,6 +151,31 @@
                             @enderror
                         </div>
 
+                        <div class="col-md-6">
+                            <label for="tempat_lahir" class="form-label fw-semibold">Tempat Lahir</label>
+                            <input type="text"
+                                   id="tempat_lahir"
+                                   name="tempat_lahir"
+                                   class="form-control @error('tempat_lahir') is-invalid @enderror"
+                                   value="{{ old('tempat_lahir') }}"
+                                   maxlength="255">
+                            @error('tempat_lahir')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="tanggal_lahir" class="form-label fw-semibold">Tanggal Lahir</label>
+                            <input type="date"
+                                   id="tanggal_lahir"
+                                   name="tanggal_lahir"
+                                   class="form-control @error('tanggal_lahir') is-invalid @enderror"
+                                   value="{{ old('tanggal_lahir') }}">
+                            @error('tanggal_lahir')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         {{-- ========================
                             NAMA ORANG TUA
                             ======================== --}}
@@ -154,6 +192,19 @@
                                    placeholder="Contoh: Bapak Ahmad Rasyid"
                                    maxlength="150">
                             @error('nama_orang_tua')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="nama_ibu" class="form-label fw-semibold">Nama Ibu</label>
+                            <input type="text"
+                                   id="nama_ibu"
+                                   name="nama_ibu"
+                                   class="form-control @error('nama_ibu') is-invalid @enderror"
+                                   value="{{ old('nama_ibu') }}"
+                                   maxlength="255">
+                            @error('nama_ibu')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -179,6 +230,44 @@
                                        maxlength="20">
                             </div>
                             @error('no_hp_orang_tua')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-12">
+                            <label for="alamat" class="form-label fw-semibold">Alamat</label>
+                            <textarea id="alamat"
+                                      name="alamat"
+                                      class="form-control @error('alamat') is-invalid @enderror"
+                                      rows="3"
+                                      placeholder="Contoh: Sambogunung Dukun Gresik">{{ old('alamat') }}</textarea>
+                            @error('alamat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="rt" class="form-label fw-semibold">RT</label>
+                            <input type="text"
+                                   id="rt"
+                                   name="rt"
+                                   class="form-control @error('rt') is-invalid @enderror"
+                                   value="{{ old('rt') }}"
+                                   maxlength="255">
+                            @error('rt')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="asal_sekolah" class="form-label fw-semibold">Asal Sekolah</label>
+                            <input type="text"
+                                   id="asal_sekolah"
+                                   name="asal_sekolah"
+                                   class="form-control @error('asal_sekolah') is-invalid @enderror"
+                                   value="{{ old('asal_sekolah') }}"
+                                   maxlength="255">
+                            @error('asal_sekolah')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

@@ -73,7 +73,34 @@
         </div>
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $pelanggaran->total() }} Catatan</span>
     </div>
-    <div class="card-body p-0">
+    <div class="d-md-none p-2">
+        @forelse($pelanggaran as $p)
+        <div class="m-card">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div class="min-w-0">
+                    <div class="fw-bold text-dark text-truncate">{{ $p->siswa->nama_siswa ?? '-' }}</div>
+                    <small class="text-muted">{{ $p->siswa->kelas->nama_kelas ?? '-' }} · {{ $p->siswa->nis_nisn ?? '-' }}</small>
+                </div>
+                <span class="badge badge-soft-danger rounded-pill px-3 py-2 fw-bold">+{{ $p->poin }}</span>
+            </div>
+            <div class="m-detail">
+                <div><i class="fa fa-calendar me-1"></i>{{ $p->tanggal ? $p->tanggal->format('d/m/Y') : '-' }}</div>
+                @if($p->jenisPelanggaran)
+                <div><i class="fa fa-tag me-1"></i>{{ $p->jenisPelanggaran->kategori->nama_kategori ?? '-' }}</div>
+                <div class="fw-semibold text-dark">{{ $p->jenisPelanggaran->uraian_pelanggaran }}</div>
+                @endif
+                @if(!empty($p->tindak_lanjut))<div><i class="fa fa-info-circle me-1"></i>{{ $p->tindak_lanjut }}</div>@endif
+                <div><i class="fa fa-user me-1"></i>{{ $p->pelapor->nama_lengkap ?? $p->pelapor->name ?? 'Admin' }}</div>
+            </div>
+            <div class="mt-2 text-end">
+                <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $p->id }}" data-nama="{{ $p->siswa->nama_siswa ?? '' }}"><i class="fa fa-trash me-1"></i>Hapus</button>
+            </div>
+        </div>
+        @empty
+        <div class="text-center text-muted py-5"><i class="fe fe-clipboard fa-3x mb-3 d-block opacity-50"></i>Belum ada catatan pelanggaran.</div>
+        @endforelse
+    </div>
+    <div class="card-body p-0 d-none d-md-block">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead>
@@ -167,12 +194,7 @@
             </table>
         </div>
     </div>
-    @if($pelanggaran->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $pelanggaran->firstItem() }}–{{ $pelanggaran->lastItem() }} dari <strong>{{ $pelanggaran->total() }}</strong> catatan</div>
-        <div>{{ $pelanggaran->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $pelanggaran, 'noun' => 'catatan'])
 </div>
 
 {{-- MODAL HAPUS --}}

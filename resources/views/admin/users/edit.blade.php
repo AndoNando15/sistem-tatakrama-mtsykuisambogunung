@@ -79,7 +79,7 @@
                                 <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->id }}" id="role_{{ $role->id }}"
                                     {{ in_array($role->id, old('roles', $userRoleIds)) ? 'checked' : '' }}>
                                 <label class="form-check-label fw-medium ms-1" for="role_{{ $role->id }}">
-                                    {{ $role->nama_role }}
+                                    {{ $role->label }}
                                 </label>
                             </div>
                         </div>

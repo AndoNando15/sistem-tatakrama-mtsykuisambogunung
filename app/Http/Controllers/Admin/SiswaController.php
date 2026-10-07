@@ -78,8 +78,15 @@ class SiswaController extends Controller
             'nama_siswa'      => ['required', 'string', 'max:150'],
             'kelas_id'        => ['required', 'integer', 'exists:kelas,id'],
             'jenis_kelamin'   => ['required', Rule::in(['L', 'P'])],
+            'nomor_induk_kemenag' => ['nullable', 'string', 'max:255'],
+            'tempat_lahir'    => ['nullable', 'string', 'max:255'],
+            'tanggal_lahir'   => ['nullable', 'date'],
             'nama_orang_tua'  => ['nullable', 'string', 'max:150'],
+            'nama_ibu'        => ['nullable', 'string', 'max:255'],
             'no_hp_orang_tua' => ['nullable', 'string', 'max:20'],
+            'alamat'          => ['nullable', 'string'],
+            'rt'              => ['nullable', 'string', 'max:255'],
+            'asal_sekolah'    => ['nullable', 'string', 'max:255'],
         ], [
             'nis_nisn.required'      => 'NIS/NISN wajib diisi.',
             'nis_nisn.unique'        => 'NIS/NISN ini sudah terdaftar di sistem.',
@@ -93,7 +100,8 @@ class SiswaController extends Controller
         // Set status aktif secara default
         $validated['is_active'] = true;
 
-        Siswa::create($validated);
+        $siswa = Siswa::create($validated);
+        $siswa->catatRiwayatKelas();
 
         return redirect()
             ->route('admin.siswa.index')
@@ -144,8 +152,15 @@ class SiswaController extends Controller
             'nama_siswa'      => ['required', 'string', 'max:150'],
             'kelas_id'        => ['required', 'integer', 'exists:kelas,id'],
             'jenis_kelamin'   => ['required', Rule::in(['L', 'P'])],
+            'nomor_induk_kemenag' => ['nullable', 'string', 'max:255'],
+            'tempat_lahir'    => ['nullable', 'string', 'max:255'],
+            'tanggal_lahir'   => ['nullable', 'date'],
             'nama_orang_tua'  => ['nullable', 'string', 'max:150'],
+            'nama_ibu'        => ['nullable', 'string', 'max:255'],
             'no_hp_orang_tua' => ['nullable', 'string', 'max:20'],
+            'alamat'          => ['nullable', 'string'],
+            'rt'              => ['nullable', 'string', 'max:255'],
+            'asal_sekolah'    => ['nullable', 'string', 'max:255'],
         ], [
             'nis_nisn.required'      => 'NIS/NISN wajib diisi.',
             'nis_nisn.unique'        => 'NIS/NISN ini sudah digunakan oleh siswa lain.',
@@ -156,6 +171,7 @@ class SiswaController extends Controller
         ]);
 
         $siswa->update($validated);
+        $siswa->catatRiwayatKelas();
 
         return redirect()
             ->route('admin.siswa.index')

@@ -35,7 +35,36 @@
         <h5 class="card-title mb-0"><i class="fe fe-users me-2"></i>Daftar Siswa & Akumulasi Poin Kelas</h5>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none">
+            @forelse($kelas->siswa as $index => $s)
+                @php
+                    $poin = $s->total_poin ?? 0;
+                    $ttl = collect([$s->tempat_lahir, $s->tanggal_lahir?->translatedFormat('d M Y')])->filter()->implode(', ');
+                @endphp
+                <div class="px-3 py-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div style="min-width:0">
+                            <div class="fw-semibold text-break">{{ $index + 1 }}. {{ $s->nama_siswa }}</div>
+                            <div class="small text-muted"><code>{{ $s->nis_nisn }}</code> · {{ $s->jenis_kelamin_label }}</div>
+                        </div>
+                        <span class="badge {{ $poin == 0 ? 'bg-success' : 'bg-danger' }} rounded-pill px-3 flex-shrink-0">{{ $poin }} Poin</span>
+                    </div>
+                    <div class="small mt-2 text-muted">
+                        @if($ttl)<div>TTL: <span class="text-dark">{{ $ttl }}</span></div>@endif
+                        <div>Ayah/Wali: <span class="text-dark">{{ $s->nama_orang_tua ?: '-' }}</span></div>
+                        <div>Ibu: <span class="text-dark">{{ $s->nama_ibu ?: '-' }}</span></div>
+                        @if($s->alamat)<div>Alamat: <span class="text-dark">{{ $s->alamat }}@if($s->rt) (RT {{ $s->rt }})@endif</span></div>@endif
+                        <div>No. HP: <span class="text-dark">{{ $s->no_hp_orang_tua ?: '-' }}</span></div>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center py-4 text-muted">Belum ada siswa di kelas ini.</div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>

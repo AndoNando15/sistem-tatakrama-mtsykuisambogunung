@@ -57,7 +57,37 @@
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $kategori->total() }} Kategori</span>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none">
+            @forelse($kategori as $index => $kat)
+                <div class="m-card">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="avatar-initial flex-shrink-0"><i class="fa fa-folder-o"></i></div>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="fw-bold text-dark text-break">{{ $kat->nama_kategori }}</div>
+                            <div class="small text-muted font-monospace">{{ $kat->kode }}</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                <span class="badge badge-soft-info text-capitalize">{{ $kat->sifat_akumulasi }}</span>
+                                <span class="badge badge-soft-primary">{{ $kat->jenis_pelanggaran_count ?? 0 }} Jenis</span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.kategori-pelanggaran.edit', $kat->id) }}" class="btn btn-sm btn-outline-primary" title="Edit Kategori"><i class="fa fa-pencil"></i></a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $kat->id }}" data-nama="{{ $kat->nama_kategori }}" title="Hapus Kategori"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center text-muted py-5 px-3">
+                    <i class="fe fe-folder fa-3x mb-3 opacity-50 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data Kategori Tidak Ditemukan</h6>
+                    <p class="small mb-0">Belum ada kategori pelanggaran yang didaftarkan.</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
@@ -117,12 +147,7 @@
             </table>
         </div>
     </div>
-    @if($kategori->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $kategori->firstItem() }}–{{ $kategori->lastItem() }} dari <strong>{{ $kategori->total() }}</strong> kategori</div>
-        <div>{{ $kategori->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $kategori, 'noun' => 'kategori'])
 </div>
 
 {{-- MODAL HAPUS --}}

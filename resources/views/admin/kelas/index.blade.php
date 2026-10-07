@@ -65,7 +65,46 @@
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $kelas->total() }} Kelas</span>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none">
+            @forelse($kelas as $index => $k)
+                @php $wali = $k->waliKelas; @endphp
+                <div class="m-card">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="avatar-initial flex-shrink-0"><i class="fe fe-grid"></i></div>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="fw-bold text-dark text-break">{{ $k->nama_kelas }}</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                <span class="badge {{ ($k->is_active ?? true) ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                    {{ ($k->is_active ?? true) ? 'Aktif' : 'Nonaktif' }}
+                                </span>
+                                <span class="badge badge-soft-info"><i class="fa fa-users me-1"></i>{{ $k->siswa_count ?? 0 }} Siswa</span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.kelas.edit', $k->id) }}" class="btn btn-sm btn-outline-primary" title="Edit Kelas"><i class="fa fa-pencil"></i></a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $k->id }}" data-nama="{{ $k->nama_kelas }}" title="Nonaktifkan Kelas"><i class="fa fa-ban"></i></button>
+                        </div>
+                    </div>
+                    <dl class="m-detail mb-0">
+                        <dt>Wali Kelas</dt>
+                        <dd>{{ $wali ? ($wali->nama_lengkap ?? $wali->name) : 'Belum ditentukan' }}</dd>
+                        @if(!empty($wali?->nip_nik))
+                            <dt>NIP</dt><dd>{{ $wali->nip_nik }}</dd>
+                        @endif
+                    </dl>
+                </div>
+            @empty
+                <div class="text-center text-muted py-5 px-3">
+                    <i class="fe fe-grid fa-3x mb-3 opacity-50 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data Kelas Tidak Ditemukan</h6>
+                    <p class="small mb-0">Belum ada data kelas yang didaftarkan.</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
@@ -151,12 +190,7 @@
             </table>
         </div>
     </div>
-    @if($kelas->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $kelas->firstItem() }}–{{ $kelas->lastItem() }} dari <strong>{{ $kelas->total() }}</strong> kelas</div>
-        <div>{{ $kelas->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $kelas, 'noun' => 'kelas'])
 </div>
 
 {{-- MODAL HAPUS --}}

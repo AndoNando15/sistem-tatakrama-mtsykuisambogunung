@@ -45,7 +45,7 @@
                     </div>
                     <div class="mh-profile-role-badge">
                         @foreach(auth()->user()->roles->take(2) as $r)
-                            {{ $r->nama_role }}{{ !$loop->last ? ' · ' : '' }}
+                            {{ $r->label }}{{ !$loop->last ? ' · ' : '' }}
                         @endforeach
                         <i class="fa fa-chevron-right ms-1 text-white-50" style="font-size: 9px;"></i>
                     </div>

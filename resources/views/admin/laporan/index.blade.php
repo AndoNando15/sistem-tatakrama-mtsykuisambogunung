@@ -75,7 +75,27 @@
                 </div>
                 <span class="badge bg-primary rounded-pill px-3 py-2">Total Record: {{ $laporanList->total() }}</span>
             </div>
-            <div class="card-body p-0">
+            <div class="d-md-none p-2">
+                @forelse($laporanList as $lap)
+                <div class="m-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div class="min-w-0">
+                            <div class="fw-bold text-dark text-truncate">{{ $lap->siswa->nama_siswa ?? '-' }}</div>
+                            <small class="text-muted">{{ $lap->siswa->kelas->nama_kelas ?? '-' }} · {{ $lap->siswa->nis_nisn ?? '-' }}</small>
+                        </div>
+                        <span class="badge badge-soft-danger rounded-pill px-3 py-2 fw-bold">+{{ $lap->poin }}</span>
+                    </div>
+                    <div class="m-detail">
+                        <div><i class="fa fa-calendar me-1"></i>{{ $lap->tanggal ? $lap->tanggal->format('d/m/Y') : '-' }}</div>
+                        <div class="fw-semibold text-dark">{{ $lap->jenisPelanggaran->uraian_pelanggaran ?? '-' }}</div>
+                        @if(!empty($lap->tindak_lanjut))<div><i class="fa fa-info-circle me-1"></i>{{ $lap->tindak_lanjut }}</div>@endif
+                    </div>
+                </div>
+                @empty
+                <div class="text-center text-muted py-5">Tidak ada data laporan sesuai filter.</div>
+                @endforelse
+            </div>
+            <div class="card-body p-0 d-none d-md-block">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead>
@@ -150,12 +170,7 @@
                     </table>
                 </div>
             </div>
-            @if($laporanList->hasPages())
-            <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-                <div class="text-muted small fw-medium">Menampilkan {{ $laporanList->firstItem() }}–{{ $laporanList->lastItem() }} dari <strong>{{ $laporanList->total() }}</strong> record</div>
-                <div>{{ $laporanList->links() }}</div>
-            </div>
-            @endif
+            @include('layouts.partials.pagination-footer', ['paginator' => $laporanList, 'noun' => 'record'])
         </div>
     </div>
 </div>

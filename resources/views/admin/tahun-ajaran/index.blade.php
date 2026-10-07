@@ -65,7 +65,38 @@
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $tahunAjaran->total() }} Record</span>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none">
+            @forelse($tahunAjaran as $index => $ta)
+                <div class="m-card">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="avatar-initial flex-shrink-0"><i class="fa fa-calendar"></i></div>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="fw-bold text-dark">{{ $ta->tahun }}</div>
+                            <div class="small text-muted">Semester {{ ucfirst($ta->semester) }}</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                <span class="badge {{ ($ta->is_active ?? true) ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                    {{ ($ta->is_active ?? true) ? 'Aktif Berjalan' : 'Nonaktif' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.tahun-ajaran.edit', $ta->id) }}" class="btn btn-sm btn-outline-primary" title="Edit Tahun Ajaran"><i class="fa fa-pencil"></i></a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $ta->id }}" data-nama="{{ $ta->tahun }} {{ $ta->semester }}" title="Nonaktifkan"><i class="fa fa-ban"></i></button>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center text-muted py-5 px-3">
+                    <i class="fe fe-calendar fa-3x mb-3 opacity-50 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data Tahun Ajaran Tidak Ditemukan</h6>
+                    <p class="small mb-0">Belum ada tahun ajaran yang didaftarkan.</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
@@ -130,12 +161,7 @@
             </table>
         </div>
     </div>
-    @if($tahunAjaran->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $tahunAjaran->firstItem() }}–{{ $tahunAjaran->lastItem() }} dari <strong>{{ $tahunAjaran->total() }}</strong> record</div>
-        <div>{{ $tahunAjaran->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $tahunAjaran, 'noun' => 'record'])
 </div>
 
 {{-- MODAL HAPUS --}}

@@ -56,7 +56,27 @@
     <div class="col-lg-8 mb-4">
         <div class="card">
             <div class="card-header"><h5 class="card-title mb-0"><i class="fe fe-list me-2"></i>Rincian Pelanggaran yang Dicatat</h5></div>
-            <div class="card-body p-0">
+            <div class="d-md-none p-2">
+                @forelse($riwayatPelanggaran as $r)
+                <div class="m-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div class="min-w-0">
+                            <div class="fw-semibold">{{ $r->jenisPelanggaran->uraian_pelanggaran ?? '-' }}</div>
+                            <small class="text-muted">{{ $r->jenisPelanggaran->kategori->nama_kategori ?? '' }}</small>
+                        </div>
+                        <span class="badge bg-danger rounded-pill px-3 py-2">+{{ $r->poin }}</span>
+                    </div>
+                    <div class="m-detail">
+                        <div><i class="fa fa-calendar me-1"></i>{{ $r->tanggal ? $r->tanggal->format('d/m/Y') : '-' }}</div>
+                        @if($r->catatan)<div class="fst-italic">"{{ $r->catatan }}"</div>@endif
+                        @if($r->tindak_lanjut)<div><i class="fa fa-info-circle me-1"></i>{{ $r->tindak_lanjut }}</div>@endif
+                    </div>
+                </div>
+                @empty
+                <div class="text-center text-muted py-5">Siswa ini bersih dari catatan pelanggaran.</div>
+                @endforelse
+            </div>
+            <div class="card-body p-0 d-none d-md-block">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead>

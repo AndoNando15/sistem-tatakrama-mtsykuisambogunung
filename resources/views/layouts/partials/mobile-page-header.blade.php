@@ -73,7 +73,7 @@
         font-weight: 700;
     }
 
-    .page-header { display: none !important; }
+    /* .page-header (tombol aksi) diatur di layouts/admin.blade.php */
 }
 @media (min-width: 769px) {
     .mobile-page-header { display: none !important; }

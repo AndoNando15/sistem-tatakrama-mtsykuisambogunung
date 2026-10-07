@@ -85,7 +85,89 @@
         </span>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none m-card-list">
+            @forelse($siswa as $index => $s)
+                @php
+                    $cleanPhone = $s->no_hp_orang_tua ? preg_replace('/[^0-9]/', '', $s->no_hp_orang_tua) : null;
+                    if ($cleanPhone && str_starts_with($cleanPhone, '0')) {
+                        $cleanPhone = '62' . substr($cleanPhone, 1);
+                    }
+                    $ttl = collect([$s->tempat_lahir, $s->tanggal_lahir?->translatedFormat('d M Y')])->filter()->implode(', ');
+                @endphp
+                <div class="m-card">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="avatar-initial flex-shrink-0">{{ strtoupper(substr($s->nama_siswa, 0, 1)) }}</div>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="fw-bold text-dark text-break">{{ $s->nama_siswa }}</div>
+                            <div class="small text-muted font-monospace">{{ $s->nis_nisn }}</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                @if($s->kelas)
+                                    <span class="badge badge-soft-info"><i class="fe fe-grid me-1"></i>{{ $s->kelas->nama_kelas }}</span>
+                                @endif
+                                <span class="badge {{ $s->jenis_kelamin === 'L' ? 'badge-soft-primary' : 'badge-soft-danger' }}">
+                                    {{ $s->jenis_kelamin_label }}
+                                </span>
+                                <span class="badge {{ ($s->is_active ?? true) ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                    {{ ($s->is_active ?? true) ? 'Aktif' : 'Nonaktif' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.siswa.edit', $s->id) }}" class="btn btn-sm btn-outline-primary" title="Edit Data Siswa">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus"
+                                    data-id="{{ $s->id }}" data-nama="{{ $s->nama_siswa }}" title="Nonaktifkan Siswa">
+                                <i class="fa fa-ban"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <dl class="m-detail mb-0">
+                        @if($s->nomor_induk_kemenag)
+                            <dt>No. Induk Kemenag</dt><dd>{{ $s->nomor_induk_kemenag }}</dd>
+                        @endif
+                        @if($ttl)
+                            <dt>TTL</dt><dd>{{ $ttl }}</dd>
+                        @endif
+                        <dt>Ayah / Wali</dt><dd>{{ $s->nama_orang_tua ?: '-' }}</dd>
+                        <dt>Ibu</dt><dd>{{ $s->nama_ibu ?: '-' }}</dd>
+                        @if($s->alamat || $s->rt)
+                            <dt>Alamat</dt>
+                            <dd>{{ $s->alamat ?: '-' }}@if($s->rt) <span class="text-muted">(RT {{ $s->rt }})</span>@endif</dd>
+                        @endif
+                        @if($s->asal_sekolah)
+                            <dt>Asal Sekolah</dt><dd>{{ $s->asal_sekolah }}</dd>
+                        @endif
+                        <dt>Kontak</dt>
+                        <dd>
+                            @if($cleanPhone)
+                                <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" class="text-success text-decoration-none">
+                                    <i class="fa fa-whatsapp"></i> {{ $s->no_hp_orang_tua }}
+                                </a>
+                            @else
+                                <span class="text-muted fst-italic">Tanpa Kontak</span>
+                            @endif
+                        </dd>
+                    </dl>
+                </div>
+            @empty
+                <div class="text-center text-muted py-5 px-3">
+                    <i class="fa fa-inbox fa-3x mb-3 opacity-50 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data Siswa Tidak Ditemukan</h6>
+                    <p class="small mb-2">Coba sesuaikan kata kunci pencarian atau filter kelas Anda.</p>
+                    @if(request()->hasAny(['search', 'kelas_id']))
+                        <a href="{{ route('admin.siswa.index') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa fa-refresh me-1"></i> Reset Filter
+                        </a>
+                    @endif
+                </div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0" id="tableSiswa">
                 <thead>
                     <tr>
@@ -117,6 +199,11 @@
                                 </div>
                                 <div>
                                     <div class="fw-bold text-dark mb-0">{{ $s->nama_siswa }}</div>
+                                    @if($s->tempat_lahir || $s->tanggal_lahir)
+                                        <div class="small text-muted">
+                                            {{ collect([$s->tempat_lahir, $s->tanggal_lahir?->translatedFormat('d M Y')])->filter()->implode(', ') }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </td>
@@ -210,16 +297,7 @@
         </div>
     </div>
 
-    @if($siswa->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">
-            Menampilkan {{ $siswa->firstItem() }}–{{ $siswa->lastItem() }} dari <strong>{{ $siswa->total() }}</strong> siswa
-        </div>
-        <div>
-            {{ $siswa->links() }}
-        </div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $siswa, 'noun' => 'siswa'])
 </div>
 
 {{-- MODAL KONFIRMASI NONAKTIFKAN SISWA --}}

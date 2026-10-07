@@ -95,7 +95,7 @@
                     <div style="margin-top: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;">
                         @foreach(auth()->user()->roles as $r)
                             <span style="background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">
-                                {{ $r->nama_role }}
+                                {{ $r->label }}
                             </span>
                         @endforeach
                     </div>

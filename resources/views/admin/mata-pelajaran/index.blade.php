@@ -65,7 +65,38 @@
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $mataPelajaran->total() }} Mapel</span>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none">
+            @forelse($mataPelajaran as $index => $mp)
+                <div class="m-card">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="avatar-initial flex-shrink-0"><i class="fe fe-book"></i></div>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="fw-bold text-dark text-break">{{ $mp->nama_mapel }}</div>
+                            <div class="small text-muted font-monospace">{{ $mp->kode_mapel ?? '-' }}</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                <span class="badge {{ ($mp->is_active ?? true) ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                    {{ ($mp->is_active ?? true) ? 'Aktif' : 'Nonaktif' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.mata-pelajaran.edit', $mp->id) }}" class="btn btn-sm btn-outline-primary" title="Edit Mapel"><i class="fa fa-pencil"></i></a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $mp->id }}" data-nama="{{ $mp->nama_mapel }}" title="Nonaktifkan Mapel"><i class="fa fa-ban"></i></button>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center text-muted py-5 px-3">
+                    <i class="fe fe-book fa-3x mb-3 opacity-50 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data Mapel Tidak Ditemukan</h6>
+                    <p class="small mb-0">Belum ada mata pelajaran yang didaftarkan.</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
@@ -130,12 +161,7 @@
             </table>
         </div>
     </div>
-    @if($mataPelajaran->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $mataPelajaran->firstItem() }}–{{ $mataPelajaran->lastItem() }} dari <strong>{{ $mataPelajaran->total() }}</strong> mapel</div>
-        <div>{{ $mataPelajaran->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $mataPelajaran, 'noun' => 'mapel'])
 </div>
 
 {{-- MODAL HAPUS --}}

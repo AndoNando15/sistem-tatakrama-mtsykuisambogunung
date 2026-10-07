@@ -34,7 +34,35 @@
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $aturan->total() }} Aturan</span>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none">
+            @forelse($aturan as $index => $a)
+                <div class="m-card">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="flex-grow-1 min-w-0">
+                            <span class="badge badge-soft-danger fw-bold"><i class="fa fa-fire me-1"></i>{{ $a->min_poin }} – {{ $a->max_poin }} Poin</span>
+                            <div class="fw-bold text-dark text-break mt-1">{{ $a->tindakan }}</div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.aturan-sanksi.edit', $a->id) }}" class="btn btn-sm btn-outline-primary" title="Edit Aturan"><i class="fa fa-pencil"></i></a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $a->id }}" data-nama="{{ $a->min_poin }} - {{ $a->max_poin }} poin" title="Hapus Aturan"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <dl class="m-detail mb-0">
+                        <dt>Nilai Sikap Maks.</dt><dd>{{ $a->nilai_sikap ? strtoupper($a->nilai_sikap) : '-' }}</dd>
+                    </dl>
+                </div>
+            @empty
+                <div class="text-center text-muted py-5 px-3">
+                    <i class="fe fe-book fa-3x mb-3 opacity-50 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data Aturan Sanksi Tidak Ditemukan</h6>
+                    <p class="small mb-0">Belum ada aturan sanksi kumulatif yang dibuat.</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
@@ -92,12 +120,7 @@
             </table>
         </div>
     </div>
-    @if($aturan->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $aturan->firstItem() }}–{{ $aturan->lastItem() }} dari <strong>{{ $aturan->total() }}</strong> aturan</div>
-        <div>{{ $aturan->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $aturan, 'noun' => 'aturan'])
 </div>
 
 {{-- MODAL HAPUS --}}

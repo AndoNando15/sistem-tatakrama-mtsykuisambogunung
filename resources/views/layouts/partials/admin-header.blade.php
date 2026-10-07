@@ -75,7 +75,7 @@
                                     $userRoles = $userObj->roles ?? collect();
                                 @endphp
                                 @if($userRoles->count() > 0)
-                                    {{ $userRoles->pluck('nama_role')->implode(', ') }}
+                                    {{ $userRoles->pluck('label')->implode(', ') }}
                                 @else
                                     Pengguna
                                 @endif

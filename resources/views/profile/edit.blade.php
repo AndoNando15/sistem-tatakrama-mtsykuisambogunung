@@ -31,7 +31,7 @@
                     <h4 class="profile-hero-name">{{ $user->nama_lengkap ?? $user->name }}</h4>
                     <p class="profile-hero-sub">
                         @foreach($user->roles as $r)
-                            <span class="badge bg-white bg-opacity-25 me-1">{{ $r->nama_role }}</span>
+                            <span class="badge bg-white bg-opacity-25 me-1">{{ $r->label }}</span>
                         @endforeach
                     </p>
                     @if($user->nip_nik)

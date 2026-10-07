@@ -60,7 +60,36 @@
         </div>
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $siswaList->total() }} Siswa</span>
     </div>
-    <div class="card-body p-0">
+    <div class="d-md-none p-2">
+        @forelse($siswaList as $s)
+        @php
+            $poin = $s->total_poin ?? 0;
+            $sanksi = $aturanSanksi->first(fn($a) => $poin >= $a->min_poin && $poin <= $a->max_poin);
+            $badge = $poin == 0 ? 'badge-soft-success' : ($poin < 20 ? 'badge-soft-info' : ($poin < 50 ? 'badge-soft-warning' : 'badge-soft-danger'));
+        @endphp
+        <div class="m-card">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div class="min-w-0">
+                    <div class="fw-bold text-dark text-truncate">{{ $s->nama_siswa }}</div>
+                    <small class="text-muted">{{ $s->kelas->nama_kelas ?? '-' }} · {{ $s->nis_nisn }}</small>
+                </div>
+                <span class="badge {{ $badge }} rounded-pill px-3 py-2 fw-bold">{{ $poin }} Poin</span>
+            </div>
+            <div class="m-detail">
+                <div><i class="fa fa-gavel me-1"></i>{{ $sanksi->tindakan ?? ($poin == 0 ? 'Tidak ada pelanggaran' : 'Peringatan ringan') }}</div>
+            </div>
+            <div class="mt-2 d-flex gap-2 justify-content-end">
+                <a href="{{ route('admin.rekap.show', $s->id) }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-eye me-1"></i>Detail</a>
+                @if($poin >= 20)
+                <a href="{{ route('admin.laporan.cetak-sp', $s->id) }}" target="_blank" class="btn btn-sm btn-outline-danger"><i class="fa fa-print me-1"></i>SP</a>
+                @endif
+            </div>
+        </div>
+        @empty
+        <div class="text-center text-muted py-5">Belum ada data rekapitulasi poin siswa.</div>
+        @endforelse
+    </div>
+    <div class="card-body p-0 d-none d-md-block">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead>
@@ -164,11 +193,6 @@
             </table>
         </div>
     </div>
-    @if($siswaList->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $siswaList->firstItem() }}–{{ $siswaList->lastItem() }} dari <strong>{{ $siswaList->total() }}</strong> siswa</div>
-        <div>{{ $siswaList->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $siswaList, 'noun' => 'siswa'])
 </div>
 @endsection

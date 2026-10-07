@@ -40,7 +40,7 @@
                         <option value="">-- Semua Role --</option>
                         @foreach($roleList as $role)
                             <option value="{{ $role->id }}" {{ request('role_id') == $role->id ? 'selected' : '' }}>
-                                {{ $role->nama_role }}
+                                {{ $role->label }}
                             </option>
                         @endforeach
                     </select>
@@ -76,7 +76,48 @@
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $users->total() }} User</span>
     </div>
     <div class="card-body p-0">
-        <div class="table-responsive">
+        {{-- TAMPILAN MOBILE: daftar kartu --}}
+        <div class="d-md-none">
+            @forelse($users as $index => $u)
+                <div class="m-card">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="avatar-initial flex-shrink-0">{{ strtoupper(substr($u->nama_lengkap ?? $u->name, 0, 1)) }}</div>
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="fw-bold text-dark text-break">{{ $u->nama_lengkap ?? $u->name }}</div>
+                            <div class="small text-muted font-monospace">@ {{ $u->username }}</div>
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                <span class="badge {{ ($u->is_active ?? true) ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                    {{ ($u->is_active ?? true) ? 'Aktif' : 'Nonaktif' }}
+                                </span>
+                                @forelse($u->roles as $role)
+                                    <span class="badge badge-soft-info">{{ $role->label }}</span>
+                                @empty
+                                    <span class="badge badge-soft-dark fst-italic">Tanpa Role</span>
+                                @endforelse
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.users.edit', $u->id) }}" class="btn btn-sm btn-outline-primary" title="Edit User"><i class="fa fa-pencil"></i></a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $u->id }}" data-nama="{{ $u->nama_lengkap ?? $u->name }}" title="Nonaktifkan User"><i class="fa fa-ban"></i></button>
+                        </div>
+                    </div>
+                    @if(!empty($u->nip_nik))
+                        <dl class="m-detail mb-0">
+                            <dt>NIP / NIK</dt><dd>{{ $u->nip_nik }}</dd>
+                        </dl>
+                    @endif
+                </div>
+            @empty
+                <div class="text-center text-muted py-5 px-3">
+                    <i class="fe fe-user-x fa-3x mb-3 opacity-50 d-block"></i>
+                    <h6 class="fw-bold mb-1">Data User Tidak Ditemukan</h6>
+                    <p class="small mb-0">Belum ada user yang terdaftar dalam sistem.</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- TAMPILAN DESKTOP: tabel --}}
+        <div class="table-responsive d-none d-md-block">
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
@@ -124,7 +165,7 @@
                                     elseif(str_contains($roleName, 'wali')) $badgeClass = 'badge-soft-warning';
                                 @endphp
                                 <span class="badge {{ $badgeClass }} fw-semibold me-1 px-2.5 py-1">
-                                    <i class="fa fa-user-shield me-1"></i>{{ $role->nama_role }}
+                                    <i class="fa fa-user-shield me-1"></i>{{ $role->label }}
                                 </span>
                             @empty
                                 <span class="badge badge-soft-dark fst-italic">Tanpa Role</span>
@@ -167,12 +208,7 @@
             </table>
         </div>
     </div>
-    @if($users->hasPages())
-    <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="text-muted small fw-medium">Menampilkan {{ $users->firstItem() }}–{{ $users->lastItem() }} dari <strong>{{ $users->total() }}</strong> user</div>
-        <div>{{ $users->links() }}</div>
-    </div>
-    @endif
+    @include('layouts.partials.pagination-footer', ['paginator' => $users, 'noun' => 'user'])
 </div>
 
 {{-- MODAL HAPUS --}}

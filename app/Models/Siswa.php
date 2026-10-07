@@ -20,8 +20,15 @@ class Siswa extends Model
         'nis_nisn',
         'nama_siswa',
         'jenis_kelamin',
+        'nomor_induk_kemenag',
+        'tempat_lahir',
+        'tanggal_lahir',
         'nama_orang_tua',
+        'nama_ibu',
         'no_hp_orang_tua',
+        'alamat',
+        'rt',
+        'asal_sekolah',
         'is_active',
     ];
 
@@ -30,6 +37,7 @@ class Siswa extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
+        'tanggal_lahir' => 'date',
     ];
 
     // ==========================================================
@@ -52,6 +60,32 @@ class Siswa extends Model
     public function pelanggaranSiswa(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PelanggaranSiswa::class, 'siswa_id');
+    }
+
+    /**
+     * Riwayat kelas siswa per tahun ajaran.
+     */
+    public function riwayatKelas(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SiswaKelas::class, 'siswa_id');
+    }
+
+    /**
+     * Catat kelas siswa saat ini pada tahun ajaran aktif.
+     * Dipanggil saat siswa dibuat atau pindah kelas; aman dipanggil berulang.
+     */
+    public function catatRiwayatKelas(): void
+    {
+        $tahunAktif = TahunAjaran::aktif()->first();
+
+        if (! $tahunAktif) {
+            return;
+        }
+
+        SiswaKelas::updateOrCreate(
+            ['siswa_id' => $this->id, 'tahun_ajaran_id' => $tahunAktif->id],
+            ['kelas_id' => $this->kelas_id]
+        );
     }
 
     // ==========================================================
