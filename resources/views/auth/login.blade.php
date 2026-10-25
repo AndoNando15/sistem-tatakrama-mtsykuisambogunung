@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Masuk | Tatakrama MTs YKUI Sambogunung</title>
+    <title>Masuk | ePoint MTs YKUI Sambogunung</title>
 
     {{-- Favicon --}}
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin-assets/assets/img/favicon.png') }}">
@@ -231,7 +231,7 @@
             <div class="brand-logo-circle">
                 <img src="{{ asset('admin-assets/assets/img/logo.png') }}" alt="Logo MTs YKUI Sambogunung">
             </div>
-            <div class="brand-title">TATAKRAMA MTS</div>
+            <div class="brand-title">ePoint MTS</div>
             <div class="brand-subtitle">YKUI Sambogunung Dukun Gresik</div>
         </div>
 

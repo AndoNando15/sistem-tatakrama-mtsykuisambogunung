@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('pengaturan_sistem', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_sekolah')->default('MTs Negeri Tatakrama');
+            $table->string('nama_sekolah')->default('MTs Negeri ePoint');
             $table->string('npsn')->nullable()->default('12345678');
-            $table->text('alamat_sekolah')->nullable()->default('Jl. Pendidikan No. 1, Kota');
+            $table->text('alamat_sekolah')->nullable();
             $table->string('nama_kepala_sekolah')->nullable()->default('Drs. H. Ahmad Dahlan, M.Pd');
             $table->string('nip_kepala_sekolah')->nullable()->default('197001011995031001');
             $table->string('nama_guru_bk')->nullable()->default('Siti Rahmawati, S.Psi');

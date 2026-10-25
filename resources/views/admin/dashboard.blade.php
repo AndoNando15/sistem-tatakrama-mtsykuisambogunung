@@ -8,7 +8,7 @@
         <div class="col">
             <h3 class="page-title text-primary fw-bold">Dashboard Administrator</h3>
             <ul class="breadcrumb">
-                <li class="breadcrumb-item active">Ringkasan Sistem Tatakrama MTs</li>
+                <li class="breadcrumb-item active">Ringkasan Sistem ePoint MTs</li>
             </ul>
         </div>
         <div class="col-auto">
@@ -153,7 +153,7 @@
                     Selamat Datang, {{ auth()->user()->nama_lengkap ?? auth()->user()->name }}! 👋
                 </h5>
                 <p class="text-dark mb-0">
-                    Anda sedang mengelola <strong>Sistem Tatakrama & Kedisiplinan Siswa MTs YKUI Sambogunung</strong>.
+                    Anda sedang mengelola <strong>Sistem ePoint & Kedisiplinan Siswa MTs YKUI Sambogunung</strong>.
                     Seluruh transaksi pencatatan poin dan pencetakan laporan otomatis terintegrasi real-time.
                 </p>
             </div>

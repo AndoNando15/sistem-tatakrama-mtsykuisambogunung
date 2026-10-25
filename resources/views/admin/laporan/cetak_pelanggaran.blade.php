@@ -30,7 +30,7 @@
     {{-- KOP SURAT --}}
     <div class="header">
         <h2>{{ $settings->nama_sekolah }}</h2>
-        <h3>SISTEM INFORMASI TATAKRAMA & KEDISIPLINAN SISWA</h3>
+        <h3>SISTEM INFORMASI ePoint & KEDISIPLINAN SISWA</h3>
         <p>{{ $settings->alamat_sekolah }} | NPSN: {{ $settings->npsn }}</p>
     </div>
 

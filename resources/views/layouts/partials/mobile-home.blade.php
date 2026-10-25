@@ -19,7 +19,7 @@
                     <i class="fa fa-shield"></i>
                 </div>
                 <div>
-                    <div class="mh-app-name">Tatakrama MTs</div>
+                    <div class="mh-app-name">ePoint MTs</div>
                     <div class="mh-app-sub">YKUI Sambogunung</div>
                 </div>
             </div>
@@ -146,7 +146,7 @@
                 </div>
                 <div>
                     <div class="mh-info-lbl">Sistem Aktif</div>
-                    <div class="mh-info-val">Tatakrama & Kedisiplinan Siswa MTs</div>
+                    <div class="mh-info-val">ePoint & Kedisiplinan Siswa MTs</div>
                 </div>
             </div>
         </div>

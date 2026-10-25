@@ -25,7 +25,7 @@ class PengaturanSistem extends Model
     public static function getSettings(): self
     {
         return static::firstOrCreate([], [
-            'nama_sekolah'        => 'MTs Negeri Tatakrama',
+            'nama_sekolah'        => 'MTs Negeri ePoint',
             'npsn'                => '12345678',
             'alamat_sekolah'      => 'Jl. Pendidikan No. 1, Kota',
             'nama_kepala_sekolah' => 'Drs. H. Ahmad Dahlan, M.Pd',

@@ -5,7 +5,7 @@
     <div class="row align-items-center">
         <div class="col-auto me-auto">
             <p class="mb-0">
-                &copy; {{ date('Y') }} <strong>Sistem Manajemen Tatakrama & Kedisiplinan Siswa</strong>.
+                &copy; {{ date('Y') }} <strong>Sistem Manajemen ePoint & Kedisiplinan Siswa</strong>.
                 Hak Cipta Dilindungi.
             </p>
         </div>
