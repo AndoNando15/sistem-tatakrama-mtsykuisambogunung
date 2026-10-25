@@ -42,13 +42,13 @@ class MataPelajaranController extends Controller
         $validated = $request->validate([
             'kode_mapel' => ['required', 'string', 'max:20', 'unique:mata_pelajaran,kode_mapel'],
             'nama_mapel' => ['required', 'string', 'max:100'],
+            'is_active'  => ['required', 'boolean'],
         ], [
             'kode_mapel.required' => 'Kode mata pelajaran wajib diisi.',
             'kode_mapel.unique'   => 'Kode mata pelajaran ini sudah ada.',
             'nama_mapel.required' => 'Nama mata pelajaran wajib diisi.',
         ]);
 
-        $validated['is_active'] = true;
         MataPelajaran::create($validated);
 
         return redirect()->route('admin.mata-pelajaran.index')
@@ -73,6 +73,7 @@ class MataPelajaranController extends Controller
         $validated = $request->validate([
             'kode_mapel' => ['required', 'string', 'max:20', Rule::unique('mata_pelajaran', 'kode_mapel')->ignore($mapel->id)],
             'nama_mapel' => ['required', 'string', 'max:100'],
+            'is_active'  => ['required', 'boolean'],
         ]);
 
         $mapel->update($validated);

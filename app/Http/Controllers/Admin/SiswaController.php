@@ -22,8 +22,11 @@ class SiswaController extends Controller
      */
     public function index(Request $request): View
     {
-        // Query dasar: hanya siswa aktif, eager load relasi kelas
-        $query = Siswa::aktif()->with('kelas');
+        $query = Siswa::with('kelas');
+
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'aktif');
+        }
 
         // Filter pencarian: nama siswa atau NIS/NISN
         if ($request->filled('search')) {
@@ -87,6 +90,7 @@ class SiswaController extends Controller
             'alamat'          => ['nullable', 'string'],
             'rt'              => ['nullable', 'string', 'max:255'],
             'asal_sekolah'    => ['nullable', 'string', 'max:255'],
+            'is_active'       => ['required', 'boolean'],
         ], [
             'nis_nisn.required'      => 'NIS/NISN wajib diisi.',
             'nis_nisn.unique'        => 'NIS/NISN ini sudah terdaftar di sistem.',
@@ -96,9 +100,6 @@ class SiswaController extends Controller
             'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih.',
             'jenis_kelamin.in'       => 'Jenis kelamin hanya boleh L (Laki-laki) atau P (Perempuan).',
         ]);
-
-        // Set status aktif secara default
-        $validated['is_active'] = true;
 
         $siswa = Siswa::create($validated);
         $siswa->catatRiwayatKelas();
@@ -128,7 +129,7 @@ class SiswaController extends Controller
     public function edit(string $id): View
     {
         // Ambil data siswa berdasarkan ID (hanya yang aktif)
-        $siswa = Siswa::aktif()->findOrFail($id);
+        $siswa = Siswa::findOrFail($id);
 
         // Ambil semua kelas aktif dari DB untuk dropdown (DINAMIS)
         $kelasList = Kelas::aktif()->orderBy('nama_kelas', 'asc')->get();
@@ -145,7 +146,7 @@ class SiswaController extends Controller
      */
     public function update(Request $request, string $id): RedirectResponse
     {
-        $siswa = Siswa::aktif()->findOrFail($id);
+        $siswa = Siswa::findOrFail($id);
 
         $validated = $request->validate([
             'nis_nisn'        => ['required', 'string', 'max:20', Rule::unique('siswa', 'nis_nisn')->ignore($siswa->id)],
@@ -161,6 +162,7 @@ class SiswaController extends Controller
             'alamat'          => ['nullable', 'string'],
             'rt'              => ['nullable', 'string', 'max:255'],
             'asal_sekolah'    => ['nullable', 'string', 'max:255'],
+            'is_active'       => ['required', 'boolean'],
         ], [
             'nis_nisn.required'      => 'NIS/NISN wajib diisi.',
             'nis_nisn.unique'        => 'NIS/NISN ini sudah digunakan oleh siswa lain.',
@@ -188,7 +190,7 @@ class SiswaController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
-        $siswa = Siswa::aktif()->findOrFail($id);
+        $siswa = Siswa::findOrFail($id);
 
         // Prinsip Soft History: ubah flag is_active menjadi false,
         // bukan menghapus record dari database.

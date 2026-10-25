@@ -14,7 +14,11 @@ class JenisPelanggaranController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = JenisPelanggaran::aktif()->with('kategori');
+        $query = JenisPelanggaran::with('kategori');
+
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'aktif');
+        }
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -51,6 +55,7 @@ class JenisPelanggaranController extends Controller
             'uraian_pelanggaran' => ['required', 'string'],
             'poin'               => ['required', 'integer', 'min:1', 'max:100'],
             'sanksi_default'     => ['nullable', 'string'],
+            'is_active'          => ['required', 'boolean'],
         ], [
             'kategori_id.required'        => 'Kategori pelanggaran wajib dipilih.',
             'kategori_id.exists'          => 'Kategori yang dipilih tidak valid.',
@@ -59,7 +64,6 @@ class JenisPelanggaranController extends Controller
             'poin.min'                    => 'Poin minimal 1.',
         ]);
 
-        $validated['is_active'] = true;
         JenisPelanggaran::create($validated);
 
         return redirect()->route('admin.jenis-pelanggaran.index')
@@ -73,14 +77,14 @@ class JenisPelanggaranController extends Controller
 
     public function edit(string $id): View
     {
-        $jenis        = JenisPelanggaran::aktif()->findOrFail($id);
+        $jenis        = JenisPelanggaran::findOrFail($id);
         $kategoriList = KategoriPelanggaran::orderBy('kode')->get();
         return view('admin.jenis-pelanggaran.edit', compact('jenis', 'kategoriList'));
     }
 
     public function update(Request $request, string $id): RedirectResponse
     {
-        $jenis = JenisPelanggaran::aktif()->findOrFail($id);
+        $jenis = JenisPelanggaran::findOrFail($id);
 
         $validated = $request->validate([
             'kategori_id'        => ['required', 'exists:kategori_pelanggaran,id'],
@@ -88,6 +92,7 @@ class JenisPelanggaranController extends Controller
             'uraian_pelanggaran' => ['required', 'string'],
             'poin'               => ['required', 'integer', 'min:1', 'max:100'],
             'sanksi_default'     => ['nullable', 'string'],
+            'is_active'          => ['required', 'boolean'],
         ]);
 
         $jenis->update($validated);
@@ -98,7 +103,7 @@ class JenisPelanggaranController extends Controller
 
     public function destroy(string $id): RedirectResponse
     {
-        $jenis = JenisPelanggaran::aktif()->findOrFail($id);
+        $jenis = JenisPelanggaran::findOrFail($id);
         // Soft History: nonaktifkan agar riwayat poin siswa tetap valid
         $jenis->update(['is_active' => false]);
 

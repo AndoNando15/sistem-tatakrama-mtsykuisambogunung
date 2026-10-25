@@ -30,7 +30,7 @@
     <div class="card-body py-3">
         <form action="{{ route('admin.siswa.index') }}" method="GET" id="filterForm">
             <div class="row g-2 align-items-end">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label for="search" class="form-label small fw-semibold text-muted mb-1">Pencarian Data</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light text-muted border-end-0"><i class="fa fa-search"></i></span>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="kelas_id" class="form-label small fw-semibold text-muted mb-1">Filter Kelas</label>
                     <select name="kelas_id" id="kelas_id" class="form-select select2">
                         <option value="">-- Semua Kelas --</option>
@@ -53,6 +53,15 @@
                                 {{ $k->nama_kelas }}
                             </option>
                         @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="status" class="form-label small fw-semibold text-muted mb-1">Status</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">-- Semua --</option>
+                        <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="nonaktif" {{ request('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                     </select>
                 </div>
 

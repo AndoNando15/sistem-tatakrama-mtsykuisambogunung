@@ -51,16 +51,7 @@
                             @error('wali_kelas_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                     </div>
-                    <!-- Tambahkan di dalam form g-3, misalnya sebelum tombol hr class="my-4" -->
-<div class="col-12">
-    <div class="form-check form-switch">
-        <input type="checkbox" class="form-check-input @error('is_active') is-invalid @enderror" 
-               id="is_active" name="is_active" value="1" 
-               {{ old('is_active', true) ? 'checked' : '' }}>
-        <label class="form-check-label fw-semibold" for="is_active">Status Aktif</label>
-        @error('is_active')<div class="invalid-feedback">{{ $message }}</div>@enderror
-    </div>
-</div>
+                    @include('admin.partials.status-field', ['active' => true, 'class' => 'mt-3'])
                     <hr class="my-4">
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('admin.kelas.index') }}" class="btn btn-outline-secondary"><i class="fa fa-times me-1"></i>Batal</a>

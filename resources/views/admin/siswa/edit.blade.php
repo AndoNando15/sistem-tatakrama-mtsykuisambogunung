@@ -300,6 +300,8 @@
                         </div>
                     </div>
 
+                    @include('admin.partials.status-field', ['active' => $siswa->is_active, 'class' => 'mt-3'])
+
                     {{-- ========================
                         TOMBOL AKSI
                         ======================== --}}

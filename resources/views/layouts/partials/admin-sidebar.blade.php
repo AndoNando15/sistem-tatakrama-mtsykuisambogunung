@@ -42,6 +42,12 @@
                             <span>Master Guru & User</span>
                         </a>
                     </li>
+                    <li class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.roles.index') }}">
+                            <i class="fa fa-shield"></i>
+                            <span>Master Role</span>
+                        </a>
+                    </li>
                     <li class="{{ request()->routeIs('admin.mata-pelajaran.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.mata-pelajaran.index') }}">
                             <i class="fa fa-book"></i>

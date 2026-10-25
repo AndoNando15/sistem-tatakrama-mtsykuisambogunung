@@ -38,6 +38,7 @@
                         <input type="text" id="nama_mapel" name="nama_mapel" class="form-control @error('nama_mapel') is-invalid @enderror" value="{{ old('nama_mapel', $mataPelajaran->nama_mapel) }}" required>
                         @error('nama_mapel')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+                    @include('admin.partials.status-field', ['active' => $mataPelajaran->is_active])
                     <div class="d-flex justify-content-between mt-4">
                         <a href="{{ route('admin.mata-pelajaran.index') }}" class="btn btn-outline-secondary"><i class="fa fa-times me-1"></i>Batal</a>
                         <button type="submit" class="btn btn-success" id="btnUpdate"><i class="fa fa-save me-1"></i>Perbarui</button>

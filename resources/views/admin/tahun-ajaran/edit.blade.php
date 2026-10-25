@@ -42,6 +42,7 @@
                         </select>
                         @error('semester')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+                    @include('admin.partials.status-field', ['active' => $tahunAjaran->is_active, 'hint' => 'Hanya satu tahun ajaran yang dapat aktif; mengaktifkan yang ini akan menonaktifkan tahun ajaran lain.'])
                     <div class="d-flex justify-content-between mt-4">
                         <a href="{{ route('admin.tahun-ajaran.index') }}" class="btn btn-outline-secondary"><i class="fa fa-times me-1"></i>Batal</a>
                         <button type="submit" class="btn btn-success" id="btnUpdate"><i class="fa fa-save me-1"></i>Perbarui</button>

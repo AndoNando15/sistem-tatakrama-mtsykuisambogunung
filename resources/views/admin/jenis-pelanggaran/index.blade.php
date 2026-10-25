@@ -34,7 +34,7 @@
                         <input type="text" name="search" class="form-control border-start-0" placeholder="Cari uraian atau kode..." value="{{ request('search') }}">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label small fw-semibold text-muted mb-1">Kategori</label>
                     <select name="kategori_id" class="form-select">
                         <option value="">-- Semua Kategori --</option>
@@ -45,7 +45,15 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted mb-1">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">-- Semua --</option>
+                        <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="nonaktif" {{ request('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary w-100"><i class="fa fa-filter me-1"></i> Filter</button>
                         <a href="{{ route('admin.jenis-pelanggaran.index') }}" class="btn btn-outline-secondary" title="Reset"><i class="fa fa-refresh"></i></a>
@@ -78,6 +86,7 @@
                             <div class="fw-bold text-dark text-break">{{ $j->uraian_pelanggaran }}</div>
                             <div class="d-flex flex-wrap gap-1 mt-1">
                                 <span class="badge badge-soft-danger rounded-pill">+{{ $j->poin }} Poin</span>
+                                <span class="badge {{ $j->is_active ? 'badge-soft-success' : 'badge-soft-danger' }}">{{ $j->is_active ? 'Aktif' : 'Nonaktif' }}</span>
                                 @if($j->kategori)
                                     <span class="badge badge-soft-info">[{{ $j->kategori->kode }}] {{ $j->kategori->nama_kategori }}</span>
                                 @endif
@@ -114,6 +123,7 @@
                         <th>Uraian Pelanggaran</th>
                         <th class="text-center">Poin</th>
                         <th>Sanksi Default</th>
+                        <th class="text-center">Status</th>
                         <th class="text-center" width="130">Aksi</th>
                     </tr>
                 </thead>
@@ -153,6 +163,13 @@
                             @endif
                         </td>
                         <td class="text-center">
+                            @if($j->is_active)
+                                <span class="badge badge-soft-success px-2.5 py-1"><i class="fa fa-check me-1"></i>Aktif</span>
+                            @else
+                                <span class="badge badge-soft-danger px-2.5 py-1"><i class="fa fa-ban me-1"></i>Nonaktif</span>
+                            @endif
+                        </td>
+                        <td class="text-center">
                             <div class="d-inline-flex gap-1">
                                 <a href="{{ route('admin.jenis-pelanggaran.edit', $j->id) }}" class="btn btn-sm btn-outline-primary" title="Edit Item">
                                     <i class="fa fa-pencil"></i>
@@ -165,7 +182,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center py-5">
+                        <td colspan="8" class="text-center py-5">
                             <div class="text-muted py-3">
                                 <i class="fe fe-list fa-3x mb-3 text-muted opacity-50 d-block"></i>
                                 <h6 class="fw-bold mb-1">Data Pelanggaran Tidak Ditemukan</h6>

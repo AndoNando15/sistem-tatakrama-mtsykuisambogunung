@@ -38,6 +38,7 @@
                         <input type="text" id="nama_mapel" name="nama_mapel" class="form-control @error('nama_mapel') is-invalid @enderror" placeholder="Contoh: Matematika" value="{{ old('nama_mapel') }}" required>
                         @error('nama_mapel')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+                    @include('admin.partials.status-field', ['active' => true])
                     <div class="d-flex justify-content-between mt-4">
                         <a href="{{ route('admin.mata-pelajaran.index') }}" class="btn btn-outline-secondary"><i class="fa fa-times me-1"></i>Batal</a>
                         <button type="submit" class="btn btn-primary" id="btnSimpan"><i class="fa fa-save me-1"></i>Simpan</button>

@@ -19,6 +19,10 @@ class TahunAjaranController extends Controller
             $query->where('tahun', 'ILIKE', '%' . $request->search . '%');
         }
 
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'aktif');
+        }
+
         $tahunAjaran = $query->orderByDesc('tahun')->orderBy('semester')->paginate(15)->withQueryString();
 
         return view('admin.tahun-ajaran.index', compact('tahunAjaran'));
@@ -34,6 +38,7 @@ class TahunAjaranController extends Controller
         $validated = $request->validate([
             'tahun'    => ['required', 'string', 'max:20'],
             'semester' => ['required', Rule::in(['ganjil', 'genap'])],
+            'is_active' => ['required', 'boolean'],
         ], [
             'tahun.required'    => 'Tahun ajaran wajib diisi (contoh: 2026/2027).',
             'semester.required' => 'Semester wajib dipilih.',
@@ -48,7 +53,9 @@ class TahunAjaranController extends Controller
             return back()->withInput()->withErrors(['tahun' => 'Kombinasi tahun ajaran dan semester ini sudah ada.']);
         }
 
-        $validated['is_active'] = false;
+        if ($validated['is_active']) {
+            TahunAjaran::query()->update(['is_active' => false]);
+        }
         TahunAjaran::create($validated);
 
         return redirect()->route('admin.tahun-ajaran.index')
@@ -73,6 +80,7 @@ class TahunAjaranController extends Controller
         $validated = $request->validate([
             'tahun'    => ['required', 'string', 'max:20'],
             'semester' => ['required', Rule::in(['ganjil', 'genap'])],
+            'is_active' => ['required', 'boolean'],
         ]);
 
         // Cek duplikat kecuali record ini sendiri
@@ -84,6 +92,9 @@ class TahunAjaranController extends Controller
             return back()->withInput()->withErrors(['tahun' => 'Kombinasi tahun ajaran dan semester ini sudah ada.']);
         }
 
+        if ($validated['is_active']) {
+            TahunAjaran::where('id', '!=', $tahunAjaran->id)->update(['is_active' => false]);
+        }
         $tahunAjaran->update($validated);
 
         return redirect()->route('admin.tahun-ajaran.index')

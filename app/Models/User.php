@@ -18,6 +18,17 @@ class User extends Authenticatable
         'email',
         'password',
         'nip_nik',
+        'nik',
+        'jabatan',
+        'nuptk',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'pendidikan_terakhir',
+        'jabatan_pokok',
+        'jabatan_tambahan',
+        'alamat',
+        'tanggal_mulai_tugas',
         'no_hp',
         'is_active',
     ];
@@ -33,6 +44,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
             'is_active'         => 'boolean',
+            'tanggal_lahir'     => 'date',
+            'tanggal_mulai_tugas' => 'date',
         ];
     }
 

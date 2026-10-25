@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('siswa', \App\Http\Controllers\Admin\SiswaController::class);
         Route::resource('kelas', \App\Http\Controllers\Admin\KelasController::class);
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
         Route::resource('mata-pelajaran', \App\Http\Controllers\Admin\MataPelajaranController::class);
         Route::resource('tahun-ajaran', \App\Http\Controllers\Admin\TahunAjaranController::class);
         Route::post('tahun-ajaran/{id}/set-aktif', [\App\Http\Controllers\Admin\TahunAjaranController::class, 'setAktif'])->name('tahun-ajaran.set-aktif');

@@ -22,7 +22,10 @@ class UserController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('nama_lengkap', 'ILIKE', "%{$search}%")
                   ->orWhere('username', 'ILIKE', "%{$search}%")
-                  ->orWhere('nip_nik', 'ILIKE', "%{$search}%");
+                  ->orWhere('nip_nik', 'ILIKE', "%{$search}%")
+                  ->orWhere('nik', 'ILIKE', "%{$search}%")
+                  ->orWhere('nuptk', 'ILIKE', "%{$search}%")
+                  ->orWhere('jabatan', 'ILIKE', "%{$search}%");
             });
         }
 
@@ -55,7 +58,19 @@ class UserController extends Controller
             'username'     => ['required', 'string', 'max:50', 'unique:users,username'],
             'email'        => ['nullable', 'email', 'unique:users,email'],
             'nip_nik'      => ['nullable', 'string', 'max:30'],
+            'nik'          => ['nullable', 'string', 'max:30'],
+            'jabatan'      => ['nullable', 'string', 'max:100'],
+            'nuptk'        => ['nullable', 'string', 'max:30'],
+            'tempat_lahir' => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'jenis_kelamin' => ['nullable', 'in:Laki-laki,Perempuan'],
+            'pendidikan_terakhir' => ['nullable', 'string', 'max:100'],
+            'jabatan_pokok' => ['nullable', 'string', 'max:100'],
+            'jabatan_tambahan' => ['nullable', 'string', 'max:100'],
+            'alamat'       => ['nullable', 'string', 'max:1000'],
+            'tanggal_mulai_tugas' => ['nullable', 'date'],
             'no_hp'        => ['nullable', 'string', 'max:20'],
+            'is_active'    => ['required', 'boolean'],
             'password'     => ['required', 'string', 'min:6', 'confirmed'],
             'roles'        => ['nullable', 'array'],
             'roles.*'      => ['exists:roles,id'],
@@ -74,9 +89,20 @@ class UserController extends Controller
             'username'     => $validated['username'],
             'email'        => $validated['email'] ?? null,
             'nip_nik'      => $validated['nip_nik'] ?? null,
+            'nik'          => $validated['nik'] ?? null,
+            'jabatan'      => $validated['jabatan'] ?? null,
+            'nuptk'        => $validated['nuptk'] ?? null,
+            'tempat_lahir' => $validated['tempat_lahir'] ?? null,
+            'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+            'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
+            'pendidikan_terakhir' => $validated['pendidikan_terakhir'] ?? null,
+            'jabatan_pokok' => $validated['jabatan_pokok'] ?? null,
+            'jabatan_tambahan' => $validated['jabatan_tambahan'] ?? null,
+            'alamat'       => $validated['alamat'] ?? null,
+            'tanggal_mulai_tugas' => $validated['tanggal_mulai_tugas'] ?? null,
             'no_hp'        => $validated['no_hp'] ?? null,
             'password'     => Hash::make($validated['password']),
-            'is_active'    => true,
+            'is_active'    => $validated['is_active'],
         ]);
 
         // Assign roles dari DB (multi-role — bukan hardcoded array)
@@ -113,7 +139,19 @@ class UserController extends Controller
             'username'     => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($user->id)],
             'email'        => ['nullable', 'email', Rule::unique('users', 'email')->ignore($user->id)],
             'nip_nik'      => ['nullable', 'string', 'max:30'],
+            'nik'          => ['nullable', 'string', 'max:30'],
+            'jabatan'      => ['nullable', 'string', 'max:100'],
+            'nuptk'        => ['nullable', 'string', 'max:30'],
+            'tempat_lahir' => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'jenis_kelamin' => ['nullable', 'in:Laki-laki,Perempuan'],
+            'pendidikan_terakhir' => ['nullable', 'string', 'max:100'],
+            'jabatan_pokok' => ['nullable', 'string', 'max:100'],
+            'jabatan_tambahan' => ['nullable', 'string', 'max:100'],
+            'alamat'       => ['nullable', 'string', 'max:1000'],
+            'tanggal_mulai_tugas' => ['nullable', 'date'],
             'no_hp'        => ['nullable', 'string', 'max:20'],
+            'is_active'    => ['required', 'boolean'],
             'roles'        => ['nullable', 'array'],
             'roles.*'      => ['exists:roles,id'],
         ];
@@ -131,7 +169,19 @@ class UserController extends Controller
             'username'     => $validated['username'],
             'email'        => $validated['email'] ?? null,
             'nip_nik'      => $validated['nip_nik'] ?? null,
+            'nik'          => $validated['nik'] ?? null,
+            'jabatan'      => $validated['jabatan'] ?? null,
+            'nuptk'        => $validated['nuptk'] ?? null,
+            'tempat_lahir' => $validated['tempat_lahir'] ?? null,
+            'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+            'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
+            'pendidikan_terakhir' => $validated['pendidikan_terakhir'] ?? null,
+            'jabatan_pokok' => $validated['jabatan_pokok'] ?? null,
+            'jabatan_tambahan' => $validated['jabatan_tambahan'] ?? null,
+            'alamat'       => $validated['alamat'] ?? null,
+            'tanggal_mulai_tugas' => $validated['tanggal_mulai_tugas'] ?? null,
             'no_hp'        => $validated['no_hp'] ?? null,
+            'is_active'    => $validated['is_active'],
         ];
 
         if ($request->filled('password')) {

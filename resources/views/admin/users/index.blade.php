@@ -31,7 +31,7 @@
                     <label class="form-label small fw-semibold text-muted mb-1">Cari User</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light text-muted border-end-0"><i class="fa fa-search"></i></span>
-                        <input type="text" name="search" class="form-control border-start-0" placeholder="Nama, username, NIP/NIK..." value="{{ request('search') }}">
+                        <input type="text" name="search" class="form-control border-start-0" placeholder="Nama, username, NIK, NUPTK, jabatan..." value="{{ request('search') }}">
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -71,7 +71,7 @@
             <div class="badge bg-soft-success text-success p-2 rounded-circle">
                 <i class="fe fe-user-check fs-5"></i>
             </div>
-            <h5 class="card-title mb-0 fw-bold text-dark">Daftar Pengguna Sistem</h5>
+            <h5 class="card-title mb-0 fw-bold text-dark">Data Guru dan User</h5>
         </div>
         <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ $users->total() }} User</span>
     </div>
@@ -101,11 +101,25 @@
                             <button type="button" class="btn btn-sm btn-outline-danger btn-hapus" data-id="{{ $u->id }}" data-nama="{{ $u->nama_lengkap ?? $u->name }}" title="Nonaktifkan User"><i class="fa fa-ban"></i></button>
                         </div>
                     </div>
-                    @if(!empty($u->nip_nik))
-                        <dl class="m-detail mb-0">
-                            <dt>NIP / NIK</dt><dd>{{ $u->nip_nik }}</dd>
-                        </dl>
-                    @endif
+                    <dl class="m-detail mb-0">
+                        @foreach([
+                            'Jabatan' => $u->jabatan,
+                            'NIK' => $u->nik,
+                            'NUPTK/PagelD' => $u->nuptk,
+                            'Tempat, Tanggal Lahir' => trim(($u->tempat_lahir ?? '') . ($u->tanggal_lahir ? ', ' . $u->tanggal_lahir->format('d/m/Y') : '')),
+                            'Jenis Kelamin' => $u->jenis_kelamin,
+                            'Pendidikan Terakhir' => $u->pendidikan_terakhir,
+                            'Jabatan Pokok' => $u->jabatan_pokok,
+                            'Jabatan Tambahan' => $u->jabatan_tambahan,
+                            'Alamat Sesuai E-KTP' => $u->alamat,
+                            'Tanggal Mulai Tugas' => $u->tanggal_mulai_tugas?->format('d/m/Y'),
+                            'No. WA Aktif' => $u->no_hp,
+                        ] as $label => $value)
+                            @if(filled($value))
+                                <dt>{{ $label }}</dt><dd>{{ $value }}</dd>
+                            @endif
+                        @endforeach
+                    </dl>
                 </div>
             @empty
                 <div class="text-center text-muted py-5 px-3">
@@ -118,15 +132,26 @@
 
         {{-- TAMPILAN DESKTOP: tabel --}}
         <div class="table-responsive d-none d-md-block">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover table-sm align-middle mb-0">
                 <thead>
                     <tr>
-                        <th width="50" class="text-center">#</th>
-                        <th>Pengguna</th>
-                        <th>NIP / NIK</th>
+                        <th class="text-center">#</th>
+                        <th>Nama</th>
+                        <th>Jabatan</th>
+                        <th>NIK</th>
+                        <th>NUPTK/PagelD</th>
+                        <th>Tempat, Tanggal Lahir</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Pendidikan Terakhir</th>
+                        <th>Jabatan Pokok</th>
+                        <th>Jabatan Tambahan</th>
+                        <th>Alamat Sesuai E-KTP</th>
+                        <th>Tanggal Mulai Tugas</th>
+                        <th>No. WA Aktif</th>
+                        <th>Username</th>
                         <th>Hak Akses (Role)</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center" width="130">Aksi</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,27 +159,22 @@
                     <tr>
                         <td class="text-center text-muted small fw-semibold">{{ $users->firstItem() + $index }}</td>
                         <td>
-                            <div class="d-flex align-items-center gap-2.5">
-                                <div class="avatar-initial">
-                                    {{ strtoupper(substr($u->nama_lengkap ?? $u->name, 0, 1)) }}
-                                </div>
-                                <div>
-                                    <div class="fw-bold text-dark mb-0">{{ $u->nama_lengkap ?? $u->name }}</div>
-                                    <span class="badge badge-soft-dark font-monospace px-1.5 py-0.5 mt-0.5">
-                                        @ {{ $u->username }}
-                                    </span>
-                                </div>
-                            </div>
+                            <span class="fw-bold text-dark">{{ $u->nama_lengkap ?? $u->name }}</span>
                         </td>
-                        <td>
-                            @if(!empty($u->nip_nik))
-                                <span class="badge badge-soft-dark font-monospace px-2 py-1">
-                                    <i class="fa fa-id-card-o me-1 text-muted"></i>{{ $u->nip_nik }}
-                                </span>
-                            @else
-                                <span class="text-muted small fst-italic">Tidak Ada</span>
-                            @endif
+                        <td>{{ $u->jabatan ?: '-' }}</td>
+                        <td class="font-monospace">{{ $u->nik ?: '-' }}</td>
+                        <td class="font-monospace">{{ $u->nuptk ?: '-' }}</td>
+                        <td class="text-nowrap">
+                            {{ trim(($u->tempat_lahir ?? '') . ($u->tanggal_lahir ? ', ' . $u->tanggal_lahir->format('d/m/Y') : '')) ?: '-' }}
                         </td>
+                        <td>{{ $u->jenis_kelamin ?: '-' }}</td>
+                        <td>{{ $u->pendidikan_terakhir ?: '-' }}</td>
+                        <td>{{ $u->jabatan_pokok ?: '-' }}</td>
+                        <td>{{ $u->jabatan_tambahan ?: '-' }}</td>
+                        <td>{{ $u->alamat ?: '-' }}</td>
+                        <td class="text-nowrap">{{ $u->tanggal_mulai_tugas?->format('d/m/Y') ?? '-' }}</td>
+                        <td class="text-nowrap">{{ $u->no_hp ?: '-' }}</td>
+                        <td>{{ $u->username }}</td>
                         <td>
                             @forelse($u->roles as $role)
                                 @php
@@ -195,7 +215,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5">
+                        <td colspan="17" class="text-center py-5">
                             <div class="text-muted py-3">
                                 <i class="fe fe-user-x fa-3x mb-3 text-muted opacity-50 d-block"></i>
                                 <h6 class="fw-bold mb-1">Data User Tidak Ditemukan</h6>

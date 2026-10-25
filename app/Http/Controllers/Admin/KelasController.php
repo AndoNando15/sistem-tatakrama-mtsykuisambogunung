@@ -14,7 +14,8 @@ class KelasController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Kelas::with('waliKelas');
+        $query = Kelas::with('waliKelas')
+            ->withCount(['siswa' => fn ($q) => $q->where('is_active', true)]);
 
         if ($request->filled('search')) {
             $query->where('nama_kelas', 'ILIKE', '%' . $request->search . '%');
@@ -41,14 +42,11 @@ class KelasController extends Controller
     $validated = $request->validate([
         'nama_kelas'    => ['required', 'string', 'max:50', 'unique:kelas,nama_kelas'],
         'wali_kelas_id' => ['nullable', 'exists:users,id'],
-        'is_active'     => ['nullable', 'boolean'],
+        'is_active'     => ['required', 'boolean'],
     ], [
         'nama_kelas.required' => 'Nama kelas wajib diisi.',
         'nama_kelas.unique'   => 'Nama kelas ini sudah ada.',
     ]);
-
-    // Jika is_active tidak ada di request (misal checkbox tidak dicentang), set true secara default atau false sesuai kebutuhan
-    $validated['is_active'] = $request->has('is_active');
 
     Kelas::create($validated);
 
@@ -75,10 +73,8 @@ public function update(Request $request, string $id): RedirectResponse
     $validated = $request->validate([
         'nama_kelas'    => ['required', 'string', 'max:50', Rule::unique('kelas', 'nama_kelas')->ignore($kelas->id)],
         'wali_kelas_id' => ['nullable', 'exists:users,id'],
-        'is_active'     => ['nullable', 'boolean'],
+        'is_active'     => ['required', 'boolean'],
     ]);
-
-    $validated['is_active'] = $request->has('is_active');
 
     $kelas->update($validated);
 

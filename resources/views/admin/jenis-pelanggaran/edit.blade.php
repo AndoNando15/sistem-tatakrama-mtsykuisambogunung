@@ -61,6 +61,7 @@
                             <input type="text" id="sanksi_default" name="sanksi_default" class="form-control @error('sanksi_default') is-invalid @enderror" value="{{ old('sanksi_default', $jenis->sanksi_default) }}">
                             @error('sanksi_default')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
+                        @include('admin.partials.status-field', ['active' => $jenis->is_active, 'class' => 'col-12'])
                     </div>
 
                     <div class="d-flex justify-content-between mt-4">
